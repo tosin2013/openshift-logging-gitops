@@ -1,0 +1,17 @@
+apiVersion: loki.grafana.com/v1
+kind: LokiStack
+metadata:
+  name: logging-loki
+  namespace: openshift-logging
+spec:
+  size: 1x.demo
+  limits:
+    global:
+      retention:
+        days: 7
+        streams:
+        - days: 3
+          priority: 1
+          selector: '{container="router"}'
+        - days: 1
+          selector: '{container="oauth-proxy"}'

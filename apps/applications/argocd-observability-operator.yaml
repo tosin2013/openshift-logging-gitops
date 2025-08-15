@@ -2,11 +2,11 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: observability-operator
-  namespace: argocd
+  namespace: openshift-gitops
 spec:
   project: default
   source:
-    repoURL: https://github.com/YOUR_ORG/openshift-logging-gitops.git
+    repoURL: https://github.com/tosin2013/openshift-logging-gitops.git
     targetRevision: HEAD
     path: base/observability-operator
   destination:

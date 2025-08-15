@@ -1,0 +1,28 @@
+apiVersion: loki.grafana.com/v1
+kind: LokiStack
+metadata:
+  name: logging-loki
+  namespace: openshift-logging
+spec:
+  size: 1x.small  # Will be overridden in overlays
+  storage:
+    schemas:
+    - version: v12
+      effectiveDate: "2022-06-01"
+    secret:
+      name: loki-s3-credentials
+      type: s3
+      credentialMode: static
+  storageClassName: gp3-csi  # Will be overridden in overlays
+  tenants:
+    mode: openshift-logging
+  limits:
+    global:
+      retention:
+        days: 30  # Will be overridden in overlays
+        streams:
+        - days: 7
+          priority: 1
+          selector: '{container="router"}'
+        - days: 1
+          selector: '{container="oauth-proxy"}'

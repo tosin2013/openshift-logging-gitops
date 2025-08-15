@@ -1,14 +1,16 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: logging-operator
+  name: logging-stack-dev
   namespace: openshift-gitops
+  labels:
+    environment: dev
 spec:
   project: default
   source:
     repoURL: https://github.com/tosin2013/openshift-logging-gitops.git
     targetRevision: HEAD
-    path: base/logging-operator
+    path: overlays/dev
   destination:
     server: https://kubernetes.default.svc
     namespace: openshift-logging
@@ -18,3 +20,8 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - ServerSideApply=true
+    managedNamespaceMetadata:
+      labels:
+        environment: dev
+        app.kubernetes.io/part-of: openshift-logging

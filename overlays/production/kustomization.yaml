@@ -1,0 +1,32 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: openshift-logging
+
+resources:
+- ../../base/external-secrets
+- ../../base/loki-stack
+- ../../base/logging
+
+commonLabels:
+  environment: production
+
+patchesStrategicMerge:
+- loki-stack-production.yaml
+- external-secret-production.yaml
+
+patches:
+- patch: |-
+    - op: replace
+      path: /spec/provider/aws/region
+      value: 'us-west-2'
+  target:
+    kind: ClusterSecretStore
+    name: aws-secrets-manager
+
+configMapGenerator:
+- name: environment-config
+  literals:
+  - environment=production
+  - region=us-west-2
+  - retention_days=90

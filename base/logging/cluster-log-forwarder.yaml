@@ -1,0 +1,24 @@
+apiVersion: logging.openshift.io/v1
+kind: ClusterLogForwarder
+metadata:
+  name: instance
+  namespace: openshift-logging
+spec:
+  serviceAccount:
+    name: logcollector
+  outputs:
+  - name: default-lokistack
+    type: lokistack
+    lokistack:
+      target:
+        name: logging-loki
+        namespace: openshift-logging
+      tenantKey: kubernetes.namespace_name
+  pipelines:
+  - name: enable-default-log-store
+    inputRefs:
+    - application
+    - infrastructure
+    filterRefs: []
+    outputRefs:
+    - default-lokistack
