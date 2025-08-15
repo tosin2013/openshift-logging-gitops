@@ -372,7 +372,7 @@ create_aws_resources() {
         
         # Pass environment-specific parameters
         if ./scripts/setup-s3-storage.sh \
-            "${bucket_prefix}-openshift-logging-s3-credentials" \
+            "$secret_name" \
             "$REGION" \
             "$retention_days"; then
             log "✓ AWS resources created successfully"
@@ -389,7 +389,7 @@ create_initial_secrets() {
     header "Phase 1b: Creating Initial Kubernetes Secrets"
     
     # Set environment-specific secret name
-    local secret_name="${ENVIRONMENT}-openshift-logging-s3-credentials"
+    local secret_name="${bucket_prefix}-openshift-logging-s3-credentials"
     
     if [ -f "./scripts/setup-external-secrets.sh" ]; then
         log "Running External Secrets setup script..."
@@ -484,7 +484,7 @@ show_manual_verification() {
     header "Phase 2: Manual Verification Required"
     
     # Environment-specific details
-    local secret_name="${ENVIRONMENT}-openshift-logging-s3-credentials"
+    local secret_name="${bucket_prefix}-openshift-logging-s3-credentials"
     local bucket_name
     
     case $ENVIRONMENT in
