@@ -8,10 +8,10 @@ spec:
   source:
     repoURL: https://github.com/tosin2013/openshift-logging-gitops.git
     targetRevision: HEAD
-    path: base/loki-operator
+    path: base/loki-operator/operator/overlays/stable-6.3
   destination:
     server: https://kubernetes.default.svc
-    namespace: openshift-operators
+    namespace: openshift-operators-redhat
   syncPolicy:
     automated:
       prune: true
