@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/tosin2013/openshift-logging-gitops.git
     targetRevision: HEAD
-    path: base/logging-operator
+    path: base/logging-operator/operator/overlays/stable-6.3
   destination:
     server: https://kubernetes.default.svc
     namespace: openshift-logging

@@ -4,7 +4,8 @@ metadata:
   name: cluster-logging
   namespace: openshift-logging
 spec:
-  channel: stable
+  channel: "patch-me-in-overlay"
+  installPlanApproval: Automatic
   name: cluster-logging
   source: redhat-operators
   sourceNamespace: openshift-marketplace
