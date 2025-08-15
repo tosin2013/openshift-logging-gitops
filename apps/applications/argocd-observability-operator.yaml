@@ -8,10 +8,10 @@ spec:
   source:
     repoURL: https://github.com/tosin2013/openshift-logging-gitops.git
     targetRevision: HEAD
-    path: base/observability-operator
+    path: base/observability-operator/operator/overlays/stable
   destination:
     server: https://kubernetes.default.svc
-    namespace: openshift-observability-operator
+    namespace: openshift-cluster-observability-operator
   syncPolicy:
     automated:
       prune: true
