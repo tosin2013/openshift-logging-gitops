@@ -16,7 +16,6 @@ spec:
     namespace: openshift-logging
   syncPolicy:
     syncOptions:
-      - CreateNamespace=true
       - ServerSideApply=true
     managedNamespaceMetadata:
       labels:
