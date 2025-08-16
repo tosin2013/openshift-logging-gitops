@@ -41,9 +41,6 @@ patches:
     - op: replace
       path: /spec/data/3/remoteRef/key
       value: 'dev-openshift-logging-s3-credentials'
-    - op: replace
-      path: /spec/data/4/remoteRef/key
-      value: 'dev-openshift-logging-s3-credentials'
   target:
     kind: ExternalSecret
     name: loki-s3-credentials
