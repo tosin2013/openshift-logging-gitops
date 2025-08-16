@@ -7,8 +7,8 @@ spec:
   size: 1x.small  # Will be overridden in overlays
   storage:
     schemas:
-    - version: v12
-      effectiveDate: "2022-06-01"
+    - version: v13
+      effectiveDate: "2024-04-01"
     secret:
       name: loki-s3-credentials
       type: s3
