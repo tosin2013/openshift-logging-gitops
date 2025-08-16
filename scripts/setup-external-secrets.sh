@@ -67,7 +67,7 @@ verify_prerequisites() {
     log "Waiting for External Secrets Operator to be ready..."
     timeout=300
     while [ $timeout -gt 0 ]; do
-        if oc get pods -n external-secrets-system | grep -q "Running"; then
+        if oc get pods -n openshift-operators | grep -q "external-secrets.*Running"; then
             log "✓ External Secrets Operator is running"
             break
         fi
