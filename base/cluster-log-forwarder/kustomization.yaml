@@ -4,8 +4,8 @@ kind: Kustomization
 resources:
 - logcollector-serviceaccount.yaml
 - cluster-log-forwarder-template.yaml
+- lokistack-bearer-token-secret.yaml
 - lokistack-rbac.yaml
-#- lokistack-bearer-token-secret.yaml
 # Dual TLS Implementation Options:
 # Option A: Immediate resolution with TLS bypass (development/emergency)
 # - option-a-tls-bypass.yaml
