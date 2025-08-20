@@ -17,7 +17,7 @@ spec:
          token:
            from: secret
            secret:
-             name: logging-loki-gateway-token
+             name: lokistack-gateway-bearer-token
              key: token
      tls:
        insecureSkipVerify: true
@@ -29,7 +29,7 @@ spec:
          token:
            from: secret
            secret:
-             name: logging-loki-gateway-token
+             name: lokistack-gateway-bearer-token
              key: token
      tls:
        insecureSkipVerify: true
@@ -41,7 +41,7 @@ spec:
          token:
            from: secret
            secret:
-             name: logging-loki-gateway-token
+             name: lokistack-gateway-bearer-token
              key: token
      tls:
        insecureSkipVerify: true
