@@ -1,0 +1,90 @@
+# Option B: Cert Manager PKI Infrastructure
+# Use Case: Production environments, long-term sustainable solution
+# Timeline: 2-4 hours implementation
+# Security: Full (encrypted and verified with automated lifecycle)
+
+---
+# Step 1: Self-signed ClusterIssuer for bootstrapping internal PKI
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: selfsigned-ca-issuer
+  labels:
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/component: cluster-issuer
+    app.kubernetes.io/part-of: internal-pki
+    logging.openshift.io/implementation-option: "b-cert-manager"
+spec:
+  selfSigned: {}
+
+---
+# Step 2: Root CA Certificate for internal PKI
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: internal-root-ca
+  namespace: cert-manager
+  labels:
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/component: root-ca
+    app.kubernetes.io/part-of: internal-pki
+    logging.openshift.io/implementation-option: "b-cert-manager"
+spec:
+  isCA: true
+  commonName: internal-root-ca
+  secretName: internal-root-ca-secret
+  duration: 8760h # 1 year
+  renewBefore: 720h # 30 days before expiry
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: selfsigned-ca-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
+
+---
+# Step 3: CA ClusterIssuer for signing service certificates
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: internal-ca-issuer
+  labels:
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/component: ca-issuer
+    app.kubernetes.io/part-of: internal-pki
+    logging.openshift.io/implementation-option: "b-cert-manager"
+spec:
+  ca:
+    secretName: internal-root-ca-secret
+
+---
+# Step 4: Certificate for Loki Gateway service
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: lokistack-gateway-tls
+  namespace: openshift-logging
+  labels:
+    app.kubernetes.io/name: loki-gateway
+    app.kubernetes.io/component: certificate
+    app.kubernetes.io/part-of: openshift-logging
+    logging.openshift.io/implementation-option: "b-cert-manager"
+spec:
+  secretName: lokistack-gateway-tls-secret
+  duration: 2160h # 90 days
+  renewBefore: 360h # 15 days before expiry
+  issuerRef:
+    name: internal-ca-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
+  dnsNames:
+    # Internal service DNS names for Loki Gateway
+    - logging-loki-gateway-http.openshift-logging.svc
+    - logging-loki-gateway-http.openshift-logging.svc.cluster.local
+  usages:
+    - server auth
+    - client auth
+  privateKey:
+    algorithm: RSA
+    size: 2048

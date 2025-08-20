@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: observability-operator
+  namespace: openshift-gitops
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/tosin2013/openshift-logging-gitops.git
+    targetRevision: HEAD
+    path: base/observability-operator/operator/overlays/stable
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-cluster-observability-operator
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

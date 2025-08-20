@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- cluster-secret-store.yaml
+- external-secret-template.yaml
+- operator-config.yaml
+
+commonLabels:
+  app.kubernetes.io/name: external-secrets
+  app.kubernetes.io/component: secret-management
+  app.kubernetes.io/part-of: openshift-logging

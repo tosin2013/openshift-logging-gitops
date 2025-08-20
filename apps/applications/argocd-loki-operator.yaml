@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: loki-operator
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/tosin2013/openshift-logging-gitops.git
+    targetRevision: HEAD
+    path: base/loki-operator/operator/overlays/stable-6.3
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-operators-redhat
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,4 @@
+# Ignore product requirements document
+.mcp-adr-cache
+mcp-shrimp-task-manager
+memory

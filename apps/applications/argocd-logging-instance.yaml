@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: logging-instance
+  namespace: openshift-gitops
+  labels:
+    component: logging-instance
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/tosin2013/openshift-logging-gitops.git
+    targetRevision: HEAD
+    path: base/logging-instance
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-logging
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - CreateNamespace=false  # Namespace managed by logging-operator
+  # Sync after logging operator is ready
+  info:
+  - name: 'Purpose'
+    value: 'Manages ClusterLogging instance - defines WHAT logs to collect'
+  - name: 'Scope'
+    value: 'Cluster-wide, environment-agnostic log collection configuration'

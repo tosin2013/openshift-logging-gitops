@@ -1,0 +1,43 @@
+apiVersion: loki.grafana.com/v1
+kind: LokiStack
+metadata:
+  name: logging-loki
+  namespace: openshift-logging
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  size: 1x.medium
+  storage:
+    schemas:
+    - version: v12
+      effectiveDate: "2022-06-01"
+    - version: v13
+      effectiveDate: "2025-08-17"
+    secret:
+      name: loki-s3-credentials
+      type: s3
+      credentialMode: static
+  storageClassName: gp3-csi
+  tenants:
+    mode: openshift-logging
+  limits:
+    global:
+      retention:
+        days: 90
+        streams:
+        - days: 30
+          priority: 1
+          selector: '{container="router"}'
+        - days: 7
+          selector: '{container="oauth-proxy"}'
+  template:
+    distributor:
+      replicas: 3
+    querier:
+      replicas: 3
+    queryFrontend:
+      replicas: 2
+    gateway:
+      replicas: 2
+    ingester:
+      replicas: 3

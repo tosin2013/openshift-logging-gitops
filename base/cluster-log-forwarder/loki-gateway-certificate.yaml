@@ -1,0 +1,49 @@
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: selfsigned-cluster-issuer
+  labels:
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/component: cluster-issuer
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: loki-gateway-cert
+  namespace: openshift-logging
+  labels:
+    app.kubernetes.io/name: loki-gateway
+    app.kubernetes.io/component: certificate
+    app.kubernetes.io/part-of: openshift-logging
+spec:
+  # Certificate details
+  secretName: loki-gateway-tls-cert
+  duration: 8760h # 1 year
+  renewBefore: 720h # 30 days before expiry
+
+  # Certificate subject
+  commonName: logging-loki-gateway-http.openshift-logging.svc.cluster.local
+
+  # Subject Alternative Names (SANs)
+  dnsNames:
+  - logging-loki-gateway-http.openshift-logging.svc
+  - logging-loki-gateway-http.openshift-logging.svc.cluster.local
+
+  # Certificate usage
+  usages:
+  - server auth
+  - client auth
+
+  # Issuer reference - use self-signed for internal services
+  issuerRef:
+    name: selfsigned-cluster-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
+
+  # Private key configuration
+  privateKey:
+    algorithm: RSA
+    size: 2048

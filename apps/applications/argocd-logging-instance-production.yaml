@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: logging-instance-production
+  namespace: openshift-gitops
+  labels:
+    environment: production
+    component: logging-instance
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/tosin2013/openshift-logging-gitops.git
+    targetRevision: HEAD
+    path: overlays/production/logging-instance
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-logging
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - Replace=true
+      - CreateNamespace=false  # Namespace managed by operator

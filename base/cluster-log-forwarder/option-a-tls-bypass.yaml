@@ -1,0 +1,51 @@
+# Option A: TLS Verification Bypass for Immediate Resolution
+# Use Case: Emergency log delivery restoration, development environments
+# Timeline: 15 minutes implementation
+# Security: Reduced (encrypted but not verified)
+
+apiVersion: observability.openshift.io/v1
+kind: ClusterLogForwarder
+metadata:
+  name: instance
+  namespace: openshift-logging
+  annotations:
+    # Track this as temporary implementation
+    logging.openshift.io/tls-bypass: "temporary-emergency-fix"
+    logging.openshift.io/bypass-reason: "certificate-verification-blocking-logs"
+    logging.openshift.io/target-migration: "option-b-cert-manager"
+    logging.openshift.io/implementation-date: "2025-08-17"
+    logging.openshift.io/migration-deadline: "30-days"
+  labels:
+    app.kubernetes.io/name: cluster-log-forwarder
+    app.kubernetes.io/component: log-forwarding
+    app.kubernetes.io/part-of: openshift-logging
+    logging.openshift.io/implementation-option: "a-tls-bypass"
+spec:
+  serviceAccount:
+    name: collector
+  outputs:
+  - name: default-lokistack
+    type: lokiStack
+    lokiStack:
+      target:
+        name: logging-loki
+        namespace: openshift-logging
+      authentication:
+        token:
+          from: serviceAccount
+      tls:
+        # TEMPORARY: Skip certificate verification for immediate resolution
+        # SECURITY IMPACT: TLS encryption maintained but certificate not verified
+        # MIGRATION REQUIRED: Must migrate to Option B within 30 days
+        insecureSkipVerify: true
+  pipelines:
+  - name: forward-app-logs-to-loki
+    inputRefs:
+    - application
+    outputRefs:
+    - default-lokistack
+  - name: forward-infrastructure-logs-to-loki
+    inputRefs:
+    - infrastructure
+    outputRefs:
+    - default-lokistack

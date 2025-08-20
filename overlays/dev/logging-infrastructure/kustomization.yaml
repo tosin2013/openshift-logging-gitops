@@ -1,0 +1,55 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- ../../../base/external-secrets
+- ../../../base/loki-stack
+- ../../../base/logging-ui-plugins
+# Note: ClusterLogForwarder moved to separate logging-forwarder application
+
+labels:
+- pairs:
+    environment: dev
+    component: logging-infrastructure
+  includeSelectors: true
+
+patches:
+- patch: |-
+    - op: replace
+      path: /spec/provider/aws/region
+      value: 'us-east-2'
+  target:
+    kind: ClusterSecretStore
+    name: aws-secrets-manager
+- patch: |-
+    - op: replace
+      path: /spec/size
+      value: '1x.demo'
+  target:
+    kind: LokiStack
+    name: logging-loki
+- patch: |-
+    - op: replace
+      path: /spec/data/0/remoteRef/key
+      value: 'dev-openshift-logging-s3-credentials'
+    - op: replace
+      path: /spec/data/1/remoteRef/key
+      value: 'dev-openshift-logging-s3-credentials'
+    - op: replace
+      path: /spec/data/2/remoteRef/key
+      value: 'dev-openshift-logging-s3-credentials'
+    - op: replace
+      path: /spec/data/3/remoteRef/key
+      value: 'dev-openshift-logging-s3-credentials'
+    - op: replace
+      path: /spec/data/4/remoteRef/key
+      value: 'dev-openshift-logging-s3-credentials'
+  target:
+    kind: ExternalSecret
+    name: loki-s3-credentials
+
+configMapGenerator:
+- name: environment-config
+  literals:
+  - environment=dev
+  - region=us-east-2

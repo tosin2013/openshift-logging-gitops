@@ -1,0 +1,39 @@
+apiVersion: observability.openshift.io/v1
+kind: ClusterLogForwarder
+metadata:
+  name: instance
+  namespace: openshift-logging
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  serviceAccount:
+    name: logcollector
+  outputs:
+  - name: default-lokistack
+    type: lokiStack
+    lokiStack:
+      target:
+        name: logging-loki
+        namespace: openshift-logging
+      authentication:
+        token:
+          from: serviceAccount
+      tls:
+        caCert:
+          configMapName: openshift-service-ca.crt
+          key: service-ca.crt
+  pipelines:
+  - name: enable-default-log-store
+    inputRefs:
+    - application
+    - infrastructure
+    filterRefs: []
+    outputRefs:
+    - default-lokistack
+  # Dev-specific: Include audit logs for debugging
+  - name: audit-logs-dev
+    inputRefs:
+    - audit
+    filterRefs: []
+    outputRefs:
+    - default-lokistack

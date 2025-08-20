@@ -1,0 +1,17 @@
+apiVersion: loki.grafana.com/v1
+kind: LokiStack
+metadata:
+  name: logging-loki
+  namespace: openshift-logging
+spec:
+  size: 1x.small  # Will be overridden in overlays
+  storage:
+    schemas:
+    - version: v13
+      effectiveDate: '2024-10-25'
+    secret:
+      name: logging-loki-aws
+      type: s3
+  storageClassName: gp3-csi  # Will be overridden in overlays
+  tenants:
+    mode: openshift-logging

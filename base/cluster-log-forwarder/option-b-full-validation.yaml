@@ -1,0 +1,50 @@
+# Option B: Full TLS Certificate Validation with Cert Manager
+# Use Case: Production environments, security compliance
+# Prerequisites: option-b-cert-manager-pki.yaml applied and certificates ready
+# Security: Full (encrypted and verified)
+
+apiVersion: observability.openshift.io/v1
+kind: ClusterLogForwarder
+metadata:
+  name: instance
+  namespace: openshift-logging
+  annotations:
+    # Track this as production implementation
+    logging.openshift.io/tls-validation: "full-certificate-verification"
+    logging.openshift.io/certificate-source: "cert-manager-internal-pki"
+    logging.openshift.io/implementation-date: "2025-08-17"
+    logging.openshift.io/security-level: "production"
+  labels:
+    app.kubernetes.io/name: cluster-log-forwarder
+    app.kubernetes.io/component: log-forwarding
+    app.kubernetes.io/part-of: openshift-logging
+    logging.openshift.io/implementation-option: "b-full-validation"
+spec:
+  serviceAccount:
+    name: collector
+  outputs:
+  - name: default-lokistack
+    type: lokiStack
+    lokiStack:
+      target:
+        name: logging-loki
+        namespace: openshift-logging
+      authentication:
+        token:
+          from: serviceAccount
+      tls:
+        # Full certificate verification using Cert Manager Root CA
+        caCert:
+          secretName: clf-trust-bundle  # Created from internal-root-ca-secret
+          key: ca-bundle.crt           # Required key name for ClusterLogForwarder
+  pipelines:
+  - name: forward-app-logs-to-loki
+    inputRefs:
+    - application
+    outputRefs:
+    - default-lokistack
+  - name: forward-infrastructure-logs-to-loki
+    inputRefs:
+    - infrastructure
+    outputRefs:
+    - default-lokistack

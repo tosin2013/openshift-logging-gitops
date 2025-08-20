@@ -1,0 +1,25 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: openshift-logging
+
+resources:
+- ../../base/loki-stack
+- ../../base/cluster-log-forwarder
+# Note: ClusterLogging managed by logging-instance ArgoCD app
+# Note: ClusterLogForwarder managed here for environment-specific routing
+
+commonLabels:
+  environment: production
+
+patchesStrategicMerge:
+- loki-stack-production.yaml
+- cluster-log-forwarder-production.yaml
+
+
+configMapGenerator:
+- name: environment-config
+  literals:
+  - environment=production
+  - region=us-west-2
+  - retention_days=90

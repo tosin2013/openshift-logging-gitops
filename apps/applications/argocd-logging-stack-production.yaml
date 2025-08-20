@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: logging-stack-production
+  namespace: openshift-gitops
+  labels:
+    environment: production
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/tosin2013/openshift-logging-gitops.git
+    targetRevision: HEAD
+    path: overlays/production
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-logging
+  syncPolicy:
+    syncOptions:
+      - ServerSideApply=true
+      - CreateNamespace=false  # Namespace managed by operator, not this app
+  # Note: No automated sync for production - requires manual approval
+  # managedNamespaceMetadata removed to prevent namespace deletion risk
