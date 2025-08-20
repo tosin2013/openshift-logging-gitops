@@ -223,6 +223,9 @@ cleanup_argocd_applications() {
         "external-secrets-operator"
         "loki-operator"
         "logging-operator"
+        "logging-infrastructure-$ENVIRONMENT"
+        "logging-forwarder-$ENVIRONMENT"
+        "observability-operator"
     )
 
     for app in "${applications[@]}"; do
