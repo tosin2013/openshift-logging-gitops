@@ -31,22 +31,25 @@ patches:
 - patch: |-
     - op: replace
       path: /spec/data/0/remoteRef/key
-      value: 'dev-openshift-logging-s3-credentials'
+      value: 'openshift-logging-s3-credentials'
     - op: replace
       path: /spec/data/1/remoteRef/key
-      value: 'dev-openshift-logging-s3-credentials'
+      value: 'openshift-logging-s3-credentials'
     - op: replace
       path: /spec/data/2/remoteRef/key
-      value: 'dev-openshift-logging-s3-credentials'
+      value: 'openshift-logging-s3-credentials'
     - op: replace
       path: /spec/data/3/remoteRef/key
-      value: 'dev-openshift-logging-s3-credentials'
+      value: 'openshift-logging-s3-credentials'
     - op: replace
       path: /spec/data/4/remoteRef/key
-      value: 'dev-openshift-logging-s3-credentials'
+      value: 'openshift-logging-s3-credentials'
+    - op: replace
+      path: /spec/data/5/remoteRef/key
+      value: 'openshift-logging-s3-credentials'
   target:
     kind: ExternalSecret
-    name: loki-s3-credentials
+    name: logging-loki-aws
 
 configMapGenerator:
 - name: environment-config
