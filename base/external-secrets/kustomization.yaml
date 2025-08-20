@@ -4,6 +4,8 @@ kind: Kustomization
 resources:
 - cluster-secret-store.yaml
 - external-secret-template.yaml
+- lokistack-bearer-token-external-secret.yaml
+- external-secrets-serviceaccount.yaml
 - operator-config.yaml
 
 commonLabels:

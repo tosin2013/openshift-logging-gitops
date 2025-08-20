@@ -20,7 +20,10 @@ spec:
              name: lokistack-gateway-bearer-token
              key: token
      tls:
-       insecureSkipVerify: true
+       ca:
+         key: ca-bundle.crt
+         secretName: lokistack-gateway-bearer-token
+       insecureSkipVerify: false
    - name: loki-infra
      type: loki
      loki:
@@ -32,7 +35,10 @@ spec:
              name: lokistack-gateway-bearer-token
              key: token
      tls:
-       insecureSkipVerify: true
+       ca:
+         key: ca-bundle.crt
+         secretName: lokistack-gateway-bearer-token
+       insecureSkipVerify: false
    - name: loki-audit
      type: loki
      loki:
@@ -44,7 +50,10 @@ spec:
              name: lokistack-gateway-bearer-token
              key: token
      tls:
-       insecureSkipVerify: true
+       ca:
+         key: ca-bundle.crt
+         secretName: lokistack-gateway-bearer-token
+       insecureSkipVerify: false
   pipelines:
    - name: send-app-logs
      inputRefs:
