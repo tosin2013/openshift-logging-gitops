@@ -12,6 +12,8 @@ spec:
     secret:
       name: logging-loki-aws
       type: s3
+    tls:
+      caName: openshift-service-ca.crt
   storageClassName: gp3-csi  # Will be overridden in overlays
   tenants:
     mode: openshift-logging
