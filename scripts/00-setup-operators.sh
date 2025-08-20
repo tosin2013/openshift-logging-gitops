@@ -151,7 +151,7 @@ verify_prerequisites() {
 deploy_operators() {
     header "Deploying Operator Applications"
     
-    local operators=("external-secrets-operator" "loki-operator" "observability-operator")
+    local operators=("external-secrets-operator" "loki-operator" "logging-operator" "observability-operator")
     
     for operator in "${operators[@]}"; do
         local app_file="apps/applications/argocd-${operator}.yaml"
@@ -178,7 +178,7 @@ wait_for_operators() {
     
     header "Waiting for Operators to be Ready"
     
-    local operators=("external-secrets-operator" "loki-operator" "observability-operator")
+    local operators=("external-secrets-operator" "loki-operator" "logging-operator" "observability-operator")
     local timeout=300  # 5 minutes
     local check_interval=15
     

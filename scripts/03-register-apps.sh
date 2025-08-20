@@ -161,7 +161,7 @@ verify_prerequisites() {
     log "✓ OpenShift GitOps namespace exists"
     
     # Check if operators are deployed and healthy
-    local operators=("external-secrets-operator" "loki-operator" "observability-operator")
+    local operators=("external-secrets-operator" "loki-operator" "logging-operator" "observability-operator")
     for operator in "${operators[@]}"; do
         if ! oc get application "$operator" -n openshift-gitops &> /dev/null; then
             error "Operator $operator not found. Run 00-setup-operators.sh first."
