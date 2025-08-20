@@ -4,11 +4,11 @@ kind: Kustomization
 resources:
 - cluster-secret-store.yaml
 - external-secret-template.yaml
-- lokistack-bearer-token-external-secret.yaml
 - external-secrets-serviceaccount.yaml
 - operator-config.yaml
 - logcollector-rbac.yaml
 - logcollector-token-secret.yaml
+- lokistack-bearer-token-job.yaml
 
 commonLabels:
   app.kubernetes.io/name: external-secrets
